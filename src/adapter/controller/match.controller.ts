@@ -1,5 +1,5 @@
 import { Controller, Post } from '@nestjs/common';
-import { MatchService } from '../../application/service/match.service';
+import { MatchService } from 'src/application/service/match/match.service';
 
 @Controller()
 export class MatchController {

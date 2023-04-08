@@ -5,7 +5,7 @@ import { ElementalRepository } from 'src/adapter/repository/elemental.repository
 import { CardDto, CardSymbolType } from 'src/domain/dto/card.dto';
 import { Atom } from 'src/domain/schema/atom.schema';
 import { Elemental } from 'src/domain/schema/element.schema';
-import { NumberHelper } from '../helper/number.helper';
+import { NumberHelper } from '../../helper/number.helper';
 
 @Injectable()
 export class CardService {
@@ -13,24 +13,28 @@ export class CardService {
     private readonly atomRepository: AtomRepository,
     private readonly elementalRepository: ElementalRepository
   ) {}
-  async generateTeamCards(): Promise<CardDto[]> {
+
+  async generateTeamCards(numCards = 5): Promise<CardDto[]> {
     const arr = [];
     const atoms = await this.atomRepository.findAll();
     const elements = await this.elementalRepository.findAll();
-    for (let i = 0; i < 5; i++)
+    for (let i = 0; i < numCards; i++)
       arr.push(await this.generateCard(atoms, elements));
     return arr;
   }
 
   async generateCard(atoms: Atom[], elements: Elemental[]): Promise<CardDto> {
+    const { symbol, value } = this.getSymbol();
     return {
-      symbol: this.getSymbol(),
+      symbol,
       atom: await this.getAtom(atoms),
-      element: await this.getElement(elements)
+      element: await this.getElement(elements),
+      originalValue: value,
+      value
     };
   }
 
-  private getSymbol(): CardSymbolType {
+  getSymbol(): { symbol: CardSymbolType; value: number } {
     const symbols: CardSymbolType[] = [
       'A',
       '2',
@@ -47,7 +51,22 @@ export class CardService {
       'K'
     ];
     const pos = NumberHelper.generateRandomNumber(0, 12);
-    return symbols[pos];
+    return { symbol: symbols[pos], value: this.translateSymbol(symbols[pos]) };
+  }
+
+  translateSymbol(symbol: string) {
+    switch (symbol) {
+      case 'A':
+        return 1;
+      case 'J':
+        return 11;
+      case 'Q':
+        return 12;
+      case 'K':
+        return 13;
+      default:
+        return Number(symbol);
+    }
   }
 
   private getAtom(atoms: Atom[]): Atom {

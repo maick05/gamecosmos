@@ -20,4 +20,6 @@ export interface CardDto {
   symbol: CardSymbolType;
   element: Elemental;
   atom: Atom;
+  originalValue?: number;
+  value?: number;
 }
