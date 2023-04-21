@@ -1,5 +1,5 @@
-import { Atom } from '../schema/atom.schema';
-import { Elemental } from '../schema/element.schema';
+import { Atom } from '../schema/game/atom.schema';
+import { Elemental } from '../schema/game/element.schema';
 
 export type CardSymbolType =
   | 'A'

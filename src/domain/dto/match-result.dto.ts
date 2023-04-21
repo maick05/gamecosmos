@@ -1,5 +1,5 @@
 import { CardDto } from './card.dto';
-import { Event } from '../schema/event.schema';
+import { Event } from '../schema/game/event.schema';
 import { EnumTeamSide } from '../enum/EnumTeamSide';
 
 export interface MatchResultDto {

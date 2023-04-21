@@ -1,10 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CardService } from './card.service';
-import { Elemental } from 'src/domain/schema/element.schema';
+import { Elemental } from 'src/domain/schema/game/element.schema';
 import { CardDto } from 'src/domain/dto/card.dto';
-import { Atom } from 'src/domain/schema/atom.schema';
+import { Atom } from 'src/domain/schema/game/atom.schema';
 import { EnumTeamSide } from 'src/domain/enum/EnumTeamSide';
-import { Event } from 'src/domain/schema/event.schema';
+import { Event } from 'src/domain/schema/game/event.schema';
 import { MatchRound } from 'src/domain/dto/match-result.dto';
 import { NumberHelper } from 'src/application/helper/number.helper';
 

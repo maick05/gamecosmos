@@ -1,0 +1,12 @@
+export enum EnumCompetitionLevel {
+  MUNICIPAL = 1,
+  INTERMUNICIPAL = 2,
+  ESTADUAL = 3,
+  INTERESTADUAL = 4,
+  REGIONAL = 5,
+  NACIONAL = 6,
+  INTERNACIONAL = 7,
+  CONTINENTAL = 8,
+  INTERCONTINENTAL = 9,
+  MUNDIAL = 10
+}

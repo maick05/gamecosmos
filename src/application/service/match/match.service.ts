@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CardService } from './card.service';
 import { CardDto } from 'src/domain/dto/card.dto';
-import { EventRepository } from 'src/adapter/repository/event.repository';
+import { EventRepository } from 'src/adapter/repository/game/event.repository';
 import { EnumTeamSide } from 'src/domain/enum/EnumTeamSide';
-import { Event } from 'src/domain/schema/event.schema';
+import { Event } from 'src/domain/schema/game/event.schema';
 import { MatchResultDto, MatchRound } from 'src/domain/dto/match-result.dto';
 import { RoundService } from './round.service';
 import { PenaltService } from './penalt.service';
@@ -39,7 +39,7 @@ export class MatchService {
       winnerName: ''
     };
 
-    const events = await this.eventRepository.findAll();
+    const events = await this.eventRepository.find({});
 
     const team1 = await this.cardService.generateTeamCards(7);
     const team2 = await this.cardService.generateTeamCards(7);
