@@ -26,6 +26,9 @@ export class Round {
 
   @Prop({ required: true, default: 1 })
   season: number;
+
+  @Prop({ required: true, default: false })
+  played: boolean;
 }
 
 const schema = SchemaFactory.createForClass(Round);

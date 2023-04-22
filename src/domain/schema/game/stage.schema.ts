@@ -24,6 +24,9 @@ export class Stage {
 
   @Prop({ required: true })
   sequence: number;
+
+  @Prop({ required: true, default: false })
+  played: boolean;
 }
 
 const schema = SchemaFactory.createForClass(Stage);

@@ -35,6 +35,7 @@ export class CreateCupService {
   ) {}
 
   async createCup(createDto: CreateCompetitionDto): Promise<any> {
+    this.logger.log(`Searching country "${createDto.location}"...`);
     const country = await this.countryRepository.findByName(createDto.location);
 
     if (country.length === 0) {
@@ -49,18 +50,25 @@ export class CreateCupService {
     competition.ref = EnumCompetitionRef.NATIONAL_CUP;
     competition.type = EnumCompetitionType.CUP;
 
+    this.logger.log(`Creating Competition "Copa ${country[0].label}"...`);
+
     const saved = await this.competitionRepository.createCompetition(
       competition
     );
+
+    this.logger.log(`Competition "Copa ${country[0].label}" created!`);
 
     const teams = await this.getTeams(competition.idLocation);
 
     const stages = await this.createStages(saved, teams.length);
 
     await this.createRounds(saved, teams, stages);
+
+    this.logger.log('Competition successfully created!');
   }
 
   private async getTeams(idCountry: string) {
+    this.logger.log('Searching teams...');
     const teams = await this.teamRepository.findTeamsByCountry(idCountry);
     return ArrayHelper.shuffleArray(teams);
   }
@@ -69,6 +77,8 @@ export class CreateCupService {
     competition: CompetitionDocument,
     teamsCount: number
   ): Promise<StageDocument[]> {
+    this.logger.log('Creating stages...');
+
     const arrStage = [];
     const stageNames = {
       16: 'Oitavas de Final',
@@ -105,6 +115,8 @@ export class CreateCupService {
     teams: TeamDocument[],
     stages: StageDocument[]
   ) {
+    this.logger.log('Creating rounds...');
+
     const round = new Round();
     round.id = 1;
     round.idCompetition = competition._id;
@@ -129,6 +141,10 @@ export class CreateCupService {
       match.idStage = stages[0]._id;
       match.idRound = savedRound._id;
       match.season = 1;
+
+      this.logger.log(
+        `Creating Match - ${teamHome.name} x ${teamOut.name} ...`
+      );
 
       await this.matchRepository.createMatch(match);
     }
