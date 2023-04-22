@@ -17,7 +17,7 @@ import {
   CompetitionDocument
 } from 'src/domain/schema/game/competition.schema';
 import { Match } from 'src/domain/schema/game/match.schema';
-import { Round } from 'src/domain/schema/game/round.schema';
+import { Round, RoundDocument } from 'src/domain/schema/game/round.schema';
 import { Stage, StageDocument } from 'src/domain/schema/game/stage.schema';
 import { TeamDocument } from 'src/domain/schema/game/team.schema';
 
@@ -117,17 +117,33 @@ export class CreateCupService {
   ) {
     this.logger.log('Creating rounds...');
 
-    const round = new Round();
-    round.id = 1;
-    round.idCompetition = competition._id;
-    round.idStage = stages[0]._id;
-    round.name = stages[0].name;
-    round.season = 1;
-    round.sequence = 1;
-    round.turn = 1;
+    let seq = 0;
 
-    const savedRound = await this.roundRepository.createRound(round);
+    for await (const stage of stages) {
+      seq++;
+      const round = new Round();
+      round.id = seq;
+      round.idCompetition = competition._id;
+      round.idStage = stage._id;
+      round.name = stage.name;
+      round.season = 1;
+      round.sequence = seq;
+      round.turn = 1;
 
+      const savedRound = await this.roundRepository.createRound(round);
+
+      if (seq > 1) continue;
+
+      await this.createMatches(competition, teams, stage, savedRound);
+    }
+  }
+
+  private async createMatches(
+    competition: CompetitionDocument,
+    teams: TeamDocument[],
+    stage: StageDocument,
+    round: RoundDocument
+  ) {
     for (let i = 0; i < teams.length; i = i + 2) {
       const teamHome = teams[i];
       const teamOut = teams[i + 1];
@@ -138,8 +154,8 @@ export class CreateCupService {
       match.idTeamOut = teamOut.id;
       match.teamOut = teamOut.name;
       match.idCompetition = competition._id;
-      match.idStage = stages[0]._id;
-      match.idRound = savedRound._id;
+      match.idStage = stage._id;
+      match.idRound = round._id;
       match.season = 1;
 
       this.logger.log(
