@@ -1,9 +1,9 @@
 import { Controller, Post } from '@nestjs/common';
-import { MatchService } from 'src/application/service/match/match.service';
+import { PlayMatchService } from 'src/application/service/match/play-match.service';
 
 @Controller()
 export class MatchController {
-  constructor(private readonly matchService: MatchService) {}
+  constructor(private readonly matchService: PlayMatchService) {}
 
   @Post('/play')
   async playMatch(): Promise<any> {

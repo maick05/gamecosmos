@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { MongooseRepository } from '@devseeder/nestjs-microservices-commons';
 import {
   Country,
   CountryDocument
 } from 'src/domain/schema/location/country.schema';
+import { GameRepository } from '../game.repository';
 
 @Injectable()
-export class CountryRepository extends MongooseRepository<
+export class CountryRepository extends GameRepository<
   Country,
   CountryDocument
 > {

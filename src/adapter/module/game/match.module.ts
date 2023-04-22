@@ -4,7 +4,7 @@ import { CardModule } from './card.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Event, EventsSchema } from 'src/domain/schema/game/event.schema';
 import { EventRepository } from '../../repository/game/event.repository';
-import { MatchService } from 'src/application/service/match/match.service';
+import { PlayMatchService } from 'src/application/service/match/play-match.service';
 import { RoundService } from 'src/application/service/match/round.service';
 import { PenaltService } from 'src/application/service/match/penalt.service';
 import { Match, MatchsSchema } from 'src/domain/schema/game/match.schema';
@@ -20,14 +20,14 @@ import { MatchRepository } from 'src/adapter/repository/game/match.repository';
   ],
   controllers: [MatchController],
   providers: [
-    MatchService,
+    PlayMatchService,
     RoundService,
     PenaltService,
     EventRepository,
     MatchRepository
   ],
   exports: [
-    MatchService,
+    PlayMatchService,
     RoundService,
     PenaltService,
     EventRepository,

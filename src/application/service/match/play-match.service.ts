@@ -10,30 +10,40 @@ import {
 } from 'src/domain/model/match-result.model';
 import { RoundService } from './round.service';
 import { PenaltService } from './penalt.service';
+import { MatchDocument } from 'src/domain/schema/game/match.schema';
+import { TeamRepository } from 'src/adapter/repository/game/team.repository';
+import { MatchRepository } from 'src/adapter/repository/game/match.repository';
 
 @Injectable()
-export class MatchService {
-  private readonly logger = new Logger(MatchService.name);
+export class PlayMatchService {
+  private readonly logger = new Logger(PlayMatchService.name);
 
   constructor(
     private readonly cardService: CardService,
     private readonly roundService: RoundService,
     private readonly penaltService: PenaltService,
-    private readonly eventRepository: EventRepository
+    private readonly eventRepository: EventRepository,
+    private readonly teamRepository: TeamRepository,
+    private readonly matchRepository: MatchRepository
   ) {}
 
-  async playMatch(): Promise<any> {
-    this.logger.log('Starting Match...');
-    const penalt = true;
+  async playMatch(match: MatchDocument, penalt = false): Promise<any> {
+    this.logger.log(`Starting Match ${match.teamHome} x ${match.teamOut} ...`);
+
+    const teamHome = await this.teamRepository.findByName(match.idTeamHome);
+    const teamOut = await this.teamRepository.findByName(match.idTeamOut);
+
     const result: MatchResultModel = {
       home: {
-        name: 'team1',
+        id: teamHome[0].id,
+        name: teamHome[0].name,
         result: 0,
         totalOriginalValue: 0,
         totalValue: 0
       },
       out: {
-        name: 'team2',
+        id: teamOut[0].id,
+        name: teamOut[0].name,
         result: 0,
         totalOriginalValue: 0,
         totalValue: 0
@@ -44,8 +54,14 @@ export class MatchService {
 
     const events = await this.eventRepository.find({});
 
-    const team1 = await this.cardService.generateTeamCards(7);
-    const team2 = await this.cardService.generateTeamCards(7);
+    const team1 = [
+      ...teamHome[0].cards,
+      ...(await this.cardService.generateTeamCards(2))
+    ];
+    const team2 = [
+      ...teamOut[0].cards,
+      ...(await this.cardService.generateTeamCards(2))
+    ];
 
     for (let i = 0; i < 7; i++) {
       this.logger.log(`#### ROUND ${i + 1} ####`);
@@ -81,18 +97,28 @@ export class MatchService {
             : result.out.name;
       } else {
         result.winnerName = 'DRAW';
+        result.winnerId = 'DRAW';
+        result.winnerRef = EnumTeamSide.DRAW;
       }
-    } else
-      result.winnerName =
-        result.home.result > result.out.result
-          ? result.home.name
-          : result.out.name;
+    } else {
+      if (result.home.result > result.out.result) {
+        result.winnerName = result.home.name;
+        result.winnerId = result.home.id;
+        result.winnerRef = EnumTeamSide.HOME;
+      } else {
+        result.winnerName = result.out.name;
+        result.winnerId = result.out.id;
+        result.winnerRef = EnumTeamSide.OUT;
+      }
+    }
 
     this.logger.log(
       `Result: ${result.home.name} (${result.home.result}) x ${result.out.name} (${result.out.result}) `
     );
 
     this.logger.log(`Winner: ${result.winnerName}`);
+
+    await this.updateMatch(match._id, result);
 
     return result;
   }
@@ -119,5 +145,31 @@ export class MatchService {
           : result.out.name;
 
     return resRound;
+  }
+
+  private async updateMatch(
+    idMatch: string,
+    result: MatchResultModel
+  ): Promise<void> {
+    await this.logger.log('Updating match...');
+    await this.matchRepository.updateOneById(idMatch, {
+      resultHome: result.home.result,
+      resultOut: result.out.result,
+      totalResultHome: {
+        totalOriginalValue: result.home.totalOriginalValue,
+        totalValue: result.home.totalValue
+      },
+      totalResultOut: {
+        totalOriginalValue: result.out.totalOriginalValue,
+        totalValue: result.out.totalValue
+      },
+      winnerId: result.winnerId,
+      winnerName: result.winnerName,
+      winnerRef: result.winnerRef,
+      rounds: result.rounds,
+      penalt: result.penalts
+    });
+
+    await this.logger.log('Match Successfully updated!');
   }
 }

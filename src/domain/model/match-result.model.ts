@@ -6,11 +6,14 @@ export interface MatchResultModel {
   home: TeamMatch;
   out: TeamMatch;
   winnerName: string;
+  winnerId?: string;
+  winnerRef?: number;
   rounds: MatchRound[];
   penalts?: PenaltResult;
 }
 
 export interface TeamMatch {
+  id: string;
   name: string;
   result: number;
   totalOriginalValue: number;

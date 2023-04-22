@@ -5,7 +5,7 @@ import {
   CompetitionsSchema
 } from 'src/domain/schema/game/competition.schema';
 import { CompetitionRepository } from '../../repository/game/competition.repository';
-import { CreateCompetitionService } from 'src/application/service/competition/create-competition.service';
+import { CreateCompetitionService } from 'src/application/service/competition/create/create-competition.service';
 import { LocationModule } from '../location/location.module';
 import { CardModule } from './card.module';
 import { CreateCupService } from 'src/application/service/competition/create-cup.service';

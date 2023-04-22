@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { MongooseRepository } from '@devseeder/nestjs-microservices-commons';
 import { Event, EventDocument } from 'src/domain/schema/game/event.schema';
+import { GameRepository } from '../game.repository';
 
 @Injectable()
-export class EventRepository extends MongooseRepository<Event, EventDocument> {
+export class EventRepository extends GameRepository<Event, EventDocument> {
   constructor(
     @InjectModel(Event.name)
     model: Model<EventDocument>
