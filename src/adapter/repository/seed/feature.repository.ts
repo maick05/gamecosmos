@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { MongooseRepository } from '@devseeder/nestjs-microservices-commons';
-import { InjectModel } from '@nestjs/mongoose';
+import { InjectModel, getModelToken } from '@nestjs/mongoose';
 import {
   Feature,
   FeatureDocument
@@ -14,7 +14,7 @@ export class FeatureRepository extends MongooseRepository<
   FeatureDocument
 > {
   constructor(
-    @InjectModel(Feature.name)
+    @InjectModel(Feature.name, 'seedConnection')
     model: Model<FeatureDocument>
   ) {
     super(model);

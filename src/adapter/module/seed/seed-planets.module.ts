@@ -1,23 +1,13 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
-import { MatchModule } from '../game/match.module';
 import { GenerateController } from 'src/adapter/controller/generate.controller';
 import { SeedTeamsService } from 'src/application/service/seed/seed-teams.service';
 import { LocationModule } from '../location/location.module';
+import { CardModule } from '../game/card.module';
+import { TeamModule } from '../game/team.module';
+import { FeatureModule } from './feature.module';
 
 @Module({
-  imports: [
-    MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (config: ConfigService) => ({
-        uri: config.get<string>('database.mongodb.seed-connection')
-      })
-    }),
-    MatchModule,
-    LocationModule
-  ],
+  imports: [FeatureModule, CardModule, TeamModule, LocationModule],
   controllers: [GenerateController],
   providers: [SeedTeamsService]
 })

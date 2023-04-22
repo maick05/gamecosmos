@@ -1,13 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-
+import { Schema as OldSchema } from 'mongoose';
 export type FeatureDocument = Feature & Document;
-
-export class Coordinate {
-  lat: number;
-  long: number;
-}
 
 @Schema({ timestamps: true, collection: 'features' })
 export class Feature {
@@ -32,8 +27,8 @@ export class Feature {
   @Prop({ required: false })
   diameter: number;
 
-  @Prop({ required: true, type: Coordinate })
-  coordinates: object;
+  @Prop({ required: true, type: Object })
+  coordinates: Coordinate;
 
   @Prop({ required: false })
   quad: string;
@@ -61,6 +56,24 @@ export interface ExternalReference {
   id: string;
 }
 
-const schema = SchemaFactory.createForClass(Feature);
+export interface Coordinate {
+  lat: number;
+  long: number;
+}
 
-export const FeatureSchema = schema;
+export const FeatureSchemaOld = new OldSchema({
+  wikiId: { type: String, required: true },
+  wikiTable: { type: String, required: true },
+  refName: { type: String, required: true },
+  refType: { type: String, required: true },
+  featureType: { type: String, required: true },
+  name: { type: String, required: true },
+  diameter: { type: Number, required: false },
+  quad: { type: String, required: false },
+  additionalInfo: { type: [String], required: false },
+  alias: { type: [String], required: false },
+  idRegion: { type: String, required: false },
+  idParent: { type: String, required: false }
+});
+
+export const FeatureSchema = SchemaFactory.createForClass(Feature);

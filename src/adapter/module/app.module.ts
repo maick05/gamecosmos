@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import configuration from '../config/configuration';
 import { GameModule } from './game/game.module';
+import { SeedPlanetsModule } from './seed/seed-planets.module';
 
 @Module({
   imports: [
@@ -9,7 +10,8 @@ import { GameModule } from './game/game.module';
       isGlobal: true,
       load: [configuration]
     }),
-    GameModule
+    GameModule,
+    SeedPlanetsModule
   ],
   controllers: [],
   providers: []
