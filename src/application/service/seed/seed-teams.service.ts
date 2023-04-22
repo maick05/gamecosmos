@@ -51,7 +51,9 @@ export class SeedTeamsService {
 
     this.logger.log('Saving country...');
 
-    const countries = await this.countryRepository.find({});
+    const countries = await this.countryRepository.find({
+      typeLoc: EnumLocType.COUNTRY
+    });
 
     const countrySaved = await this.countryRepository.createCountry({
       id: countries.length + 1,

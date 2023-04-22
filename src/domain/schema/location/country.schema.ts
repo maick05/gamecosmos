@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { GameLocation } from './location.schema';
 
 export type CountryDocument = Country & Document;
 
+@Schema({ timestamps: true, collection: 'locations' })
 export class Country extends GameLocation {
   @Prop({ required: true })
   idContinent: string;
