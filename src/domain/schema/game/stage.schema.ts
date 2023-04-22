@@ -5,7 +5,7 @@ import { EnumStageType } from 'src/domain/enum/EnumStageType';
 
 export type StageDocument = Stage & Document;
 
-@Schema({ timestamps: true, collection: 'Stages' })
+@Schema({ timestamps: true, collection: 'stages' })
 export class Stage {
   @Prop({ required: true })
   id: number;
