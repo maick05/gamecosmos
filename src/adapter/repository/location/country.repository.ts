@@ -22,4 +22,8 @@ export class CountryRepository extends MongooseRepository<
   async createCountry(country: Country): Promise<CountryDocument> {
     return this.model.create(country);
   }
+
+  async findByName(name: string): Promise<CountryDocument[]> {
+    return this.model.find({ name });
+  }
 }

@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CardService } from './card.service';
 import { Elemental } from 'src/domain/schema/game/element.schema';
-import { CardDto } from 'src/domain/dto/card.dto';
+import { CardModel } from 'src/domain/model/card.model';
 import { Atom } from 'src/domain/schema/game/atom.schema';
 import { EnumTeamSide } from 'src/domain/enum/EnumTeamSide';
 import { Event } from 'src/domain/schema/game/event.schema';
-import { MatchRound } from 'src/domain/dto/match-result.dto';
+import { MatchRound } from 'src/domain/model/match-result.model';
 import { NumberHelper } from 'src/application/helper/number.helper';
 
 @Injectable()
@@ -15,8 +15,8 @@ export class RoundService {
   constructor(private readonly cardService: CardService) {}
 
   async playRound(
-    card1: CardDto,
-    card2: CardDto,
+    card1: CardModel,
+    card2: CardModel,
     events: Event[]
   ): Promise<MatchRound> {
     this.checkCardA(card1, card2);
@@ -37,14 +37,14 @@ export class RoundService {
     return this.returnRoundResult(card1, card2, events);
   }
 
-  private checkCardA(card1: CardDto, card2: CardDto): void {
+  private checkCardA(card1: CardModel, card2: CardModel): void {
     if (card1.symbol === 'A' && card2.symbol == 'K') card1.value = 14;
     if (card2.symbol === 'A' && card1.symbol == 'K') card2.value = 14;
   }
 
   private async returnRoundResult(
-    card1: CardDto,
-    card2: CardDto,
+    card1: CardModel,
+    card2: CardModel,
     events: Event[]
   ): Promise<Promise<MatchRound>> {
     this.logger.log('Rolling Event for Home...');
@@ -73,7 +73,7 @@ export class RoundService {
     else return EnumTeamSide.DRAW;
   }
 
-  private calculateAtomValue(card: CardDto): number {
+  private calculateAtomValue(card: CardModel): number {
     return Number(
       (card.value + card.value * (this.getAtomValue(card.atom) / 100)).toFixed(
         2
@@ -88,8 +88,8 @@ export class RoundService {
   }
 
   private async rollEventDice(
-    cardWinner: CardDto,
-    cardAdv: CardDto,
+    cardWinner: CardModel,
+    cardAdv: CardModel,
     events: Event[]
   ): Promise<Event | null> {
     this.logger.log('Rolling event dice...');

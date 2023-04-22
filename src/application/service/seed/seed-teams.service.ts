@@ -63,7 +63,8 @@ export class SeedTeamsService {
       idSeedFeature: parent[0]._id.toString(),
       name: seedDto.name,
       wikiId: seedDto.wikiId,
-      wikiTable: seedDto.wikiTable
+      wikiTable: seedDto.wikiTable,
+      label: seedDto.label
     });
 
     this.logger.log('Searching features by country...');

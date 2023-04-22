@@ -15,4 +15,5 @@ export class SeedTeamsDto {
   public featureType: string;
   public name: string;
   public idContinent: string;
+  public label: string;
 }

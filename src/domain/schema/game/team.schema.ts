@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { CardDto } from 'src/domain/dto/card.dto';
+import { CardModel } from 'src/domain/model/card.model';
 
 export type TeamDocument = Team & Document;
 
@@ -29,7 +29,7 @@ export class Team {
   money: number;
 
   @Prop({ required: true })
-  cards: CardDto[];
+  cards: CardModel[];
 }
 
 const schema = SchemaFactory.createForClass(Team);

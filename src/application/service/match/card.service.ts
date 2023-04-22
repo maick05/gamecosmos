@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { AtomRepository } from 'src/adapter/repository/game/atom.repository';
 import { ElementalRepository } from 'src/adapter/repository/game/elemental.repository';
-import { CardDto, CardSymbolType } from 'src/domain/dto/card.dto';
+import { CardModel, CardSymbolType } from 'src/domain/model/card.model';
 import { Atom } from 'src/domain/schema/game/atom.schema';
 import { Elemental } from 'src/domain/schema/game/element.schema';
 import { NumberHelper } from '../../helper/number.helper';
@@ -14,7 +14,7 @@ export class CardService {
     private readonly elementalRepository: ElementalRepository
   ) {}
 
-  async generateTeamCards(numCards = 5): Promise<CardDto[]> {
+  async generateTeamCards(numCards = 5): Promise<CardModel[]> {
     const arr = [];
     const atoms = await this.atomRepository.findFeatureByParent();
     const elements = await this.elementalRepository.find({});
@@ -23,7 +23,7 @@ export class CardService {
     return arr;
   }
 
-  async generateCard(atoms: Atom[], elements: Elemental[]): Promise<CardDto> {
+  async generateCard(atoms: Atom[], elements: Elemental[]): Promise<CardModel> {
     const { symbol, value } = this.getSymbol();
     return {
       symbol,

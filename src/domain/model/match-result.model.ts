@@ -1,8 +1,8 @@
-import { CardDto } from './card.dto';
+import { CardModel } from './card.model';
 import { Event } from '../schema/game/event.schema';
 import { EnumTeamSide } from '../enum/EnumTeamSide';
 
-export interface MatchResultDto {
+export interface MatchResultModel {
   home: TeamMatch;
   out: TeamMatch;
   winnerName: string;
@@ -19,8 +19,8 @@ export interface TeamMatch {
 
 export interface MatchRound {
   round?: number;
-  cardHome: CardDto;
-  cardOut: CardDto;
+  cardHome: CardModel;
+  cardOut: CardModel;
   eventHome: Event | null;
   eventOut: Event | null;
   winner: number;

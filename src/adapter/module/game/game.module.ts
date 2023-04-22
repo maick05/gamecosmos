@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MatchModule } from './match.module';
+import { CompetitionModule } from './competition.module';
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { MatchModule } from './match.module';
         uri: config.get<string>('database.mongodb.connection')
       })
     }),
-    MatchModule
+    MatchModule,
+    CompetitionModule
   ],
   controllers: [],
   providers: []

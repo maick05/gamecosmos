@@ -16,7 +16,7 @@ export type CardSymbolType =
   | 'Q'
   | 'K';
 
-export interface CardDto {
+export interface CardModel {
   symbol: CardSymbolType;
   element: Elemental;
   atom: Atom;

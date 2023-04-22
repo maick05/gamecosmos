@@ -1,15 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ArrayHelper } from 'src/application/helper/array.helper';
 import { NumberHelper } from 'src/application/helper/number.helper';
-import { CardDto } from 'src/domain/dto/card.dto';
-import { PenaltResult } from 'src/domain/dto/match-result.dto';
+import { CardModel } from 'src/domain/model/card.model';
+import { PenaltResult } from 'src/domain/model/match-result.model';
 import { EnumTeamSide } from 'src/domain/enum/EnumTeamSide';
 
 @Injectable()
 export class PenaltService {
   private readonly logger = new Logger(PenaltService.name);
 
-  playMatchPenalts(team1: CardDto[], team2: CardDto[]): PenaltResult {
+  playMatchPenalts(team1: CardModel[], team2: CardModel[]): PenaltResult {
     this.logger.log('Starting penalts...');
 
     const resultPenalts: PenaltResult = {
@@ -52,8 +52,8 @@ export class PenaltService {
   }
 
   playPenalt(
-    team1: CardDto,
-    team2: CardDto,
+    team1: CardModel,
+    team2: CardModel,
     i: number,
     resultPenalts: PenaltResult
   ): void {

@@ -1,10 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CardService } from './card.service';
-import { CardDto } from 'src/domain/dto/card.dto';
+import { CardModel } from 'src/domain/model/card.model';
 import { EventRepository } from 'src/adapter/repository/game/event.repository';
 import { EnumTeamSide } from 'src/domain/enum/EnumTeamSide';
 import { Event } from 'src/domain/schema/game/event.schema';
-import { MatchResultDto, MatchRound } from 'src/domain/dto/match-result.dto';
+import {
+  MatchResultModel,
+  MatchRound
+} from 'src/domain/model/match-result.model';
 import { RoundService } from './round.service';
 import { PenaltService } from './penalt.service';
 
@@ -22,7 +25,7 @@ export class MatchService {
   async playMatch(): Promise<any> {
     this.logger.log('Starting Match...');
     const penalt = true;
-    const result: MatchResultDto = {
+    const result: MatchResultModel = {
       home: {
         name: 'team1',
         result: 0,
@@ -95,10 +98,10 @@ export class MatchService {
   }
 
   async playMatchRound(
-    team1: CardDto,
-    team2: CardDto,
+    team1: CardModel,
+    team2: CardModel,
     roundNum: number,
-    result: MatchResultDto,
+    result: MatchResultModel,
     events: Event[]
   ): Promise<MatchRound> {
     const resRound = await this.roundService.playRound(team1, team2, events);

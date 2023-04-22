@@ -12,6 +12,9 @@ export abstract class GameLocation {
   @Prop({ required: true })
   name: string;
 
+  @Prop({ required: false })
+  label: string;
+
   @Prop({ required: true })
   typeLoc: string;
 
