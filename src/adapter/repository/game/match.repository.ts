@@ -20,7 +20,7 @@ export class MatchRepository extends GameRepository<Match, MatchDocument> {
   async findMatchsByRound(idRound: string): Promise<MatchDocument[]> {
     return this.model.find(
       { idRound },
-      { _id: 1, idTeamHome: 1, idTeamOut: 1 }
+      { _id: 1, idTeamHome: 1, idTeamOut: 1, teamHome: 1, teamOut: 1 }
     );
   }
 }

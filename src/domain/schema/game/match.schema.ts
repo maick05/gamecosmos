@@ -10,7 +10,7 @@ export interface TotalResult {
 
 export type MatchDocument = Match & Document;
 
-@Schema({ timestamps: true, collection: 'matchs' })
+@Schema({ timestamps: true, collection: 'matches' })
 export class Match {
   @Prop({ required: true })
   idTeamHome: string;

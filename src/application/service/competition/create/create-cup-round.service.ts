@@ -30,33 +30,46 @@ export class CreateCupRoundService {
 
     let nextRounds = [];
 
-    nextRounds = await this.roundRepository.find({
-      idCompetition: competition._id,
-      idStage: round.idStage,
-      season: round.season,
-      sequence: round.sequence + 1
-    });
+    nextRounds = await this.roundRepository.find(
+      {
+        idCompetition: competition._id,
+        idStage: round.idStage,
+        season: round.season,
+        sequence: round.sequence + 1
+      },
+      { _id: 1, sequence: 1, idStage: 1 }
+    );
 
     if (nextRounds.length === 0) {
       await this.stageRepository.updateOneById(round.idStage, { played: true });
 
-      const actualStage = await this.stageRepository.findById(round.idStage);
-      const nextStage = await this.stageRepository.find({
-        idCompetition: competition._id,
-        sequence: actualStage.sequence + 1
+      const actualStage = await this.stageRepository.findById(round.idStage, {
+        _id: 1,
+        name: 1,
+        sequence: 1
       });
+      const nextStage = await this.stageRepository.find(
+        {
+          idCompetition: competition._id,
+          sequence: actualStage.sequence + 1
+        },
+        { _id: 1, name: 1, sequence: 1 }
+      );
 
       if (!nextStage) {
         this.logger.warn('No more stages');
         return;
       }
 
-      nextRounds = await this.roundRepository.find({
-        idCompetition: competition._id,
-        idStage: nextStage[0].idStage,
-        season: round.season,
-        sequence: 1
-      });
+      nextRounds = await this.roundRepository.find(
+        {
+          idCompetition: competition._id,
+          idStage: nextStage[0]._id,
+          season: round.season,
+          sequence: 1
+        },
+        { _id: 1, sequence: 1, idStage: 1 }
+      );
 
       if (nextRounds.length === 0) {
         throw new NotFoundException('No more rounds');
@@ -66,15 +79,23 @@ export class CreateCupRoundService {
     const oldMatches = await this.matchRepository.find({ idRound: round._id });
 
     for (let i = 0; i < oldMatches.length; i = i + 2) {
-      const team1 = await this.teamRepository.findById(oldMatches[i].winnerId);
+      const team1 = await this.teamRepository.findById(oldMatches[i].winnerId, {
+        _id: 1,
+        name: 1,
+        idRound: 1
+      });
       const team2 = await this.teamRepository.findById(
-        oldMatches[i + 1].winnerId
+        oldMatches[i + 1].winnerId,
+        {
+          _id: 1,
+          name: 1
+        }
       );
 
       await this.createMatch(
         competition,
-        team1[0],
-        team2[0],
+        team1,
+        team2,
         { _id: nextRounds[0].idStage },
         nextRounds[0]
       );
@@ -91,7 +112,7 @@ export class CreateCupRoundService {
     const match = new Match();
     match.idTeamHome = teamHome._id;
     match.teamHome = teamHome.name;
-    match.idTeamOut = teamOut.id;
+    match.idTeamOut = teamOut._id;
     match.teamOut = teamOut.name;
     match.idCompetition = competition._id;
     match.idStage = stage._id;

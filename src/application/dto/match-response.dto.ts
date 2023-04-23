@@ -5,6 +5,7 @@ export class MatchResponse {
   resultHome: number;
   teamOut: string;
   resultOut: number;
+  winner: string;
   totals: {
     totalHome: number;
     totalOut: number;

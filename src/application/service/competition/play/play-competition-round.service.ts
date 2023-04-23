@@ -61,7 +61,7 @@ export class PlayCompetitionRoundService {
         played: false,
         idCompetition: idCompetition
       },
-      { sequence: 1 }
+      { sequence: 1, idStage: 1, idCompetition: 1, _id: 1, name: 1 }
     );
 
     if (round.length === 0) {
@@ -100,6 +100,7 @@ export class PlayCompetitionRoundService {
       resultHome: result.home.result,
       teamOut: result.out.name,
       resultOut: result.out.result,
+      winner: result.winnerName,
       totals: {
         totalHome: result.home.totalValue,
         totalOut: result.out.totalValue,

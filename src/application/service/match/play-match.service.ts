@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CardService } from './card.service';
 import { CardModel } from 'src/domain/model/card.model';
 import { EventRepository } from 'src/adapter/repository/game/event.repository';
@@ -30,20 +30,32 @@ export class PlayMatchService {
   async playMatch(match: MatchDocument, penalt = false): Promise<any> {
     this.logger.log(`Starting Match ${match.teamHome} x ${match.teamOut} ...`);
 
-    const teamHome = await this.teamRepository.findByName(match.idTeamHome);
-    const teamOut = await this.teamRepository.findByName(match.idTeamOut);
+    const teamHome = await this.teamRepository.findById(match.idTeamHome, {
+      _id: 1,
+      name: 1,
+      cards: 1
+    });
+    const teamOut = await this.teamRepository.findById(match.idTeamOut, {
+      _id: 1,
+      name: 1,
+      cards: 1
+    });
+
+    if (!teamHome || !teamOut) {
+      throw new NotFoundException('Team not found');
+    }
 
     const result: MatchResultModel = {
       home: {
-        id: teamHome[0].id,
-        name: teamHome[0].name,
+        id: teamHome._id,
+        name: teamHome.name,
         result: 0,
         totalOriginalValue: 0,
         totalValue: 0
       },
       out: {
-        id: teamOut[0].id,
-        name: teamOut[0].name,
+        id: teamOut._id,
+        name: teamOut.name,
         result: 0,
         totalOriginalValue: 0,
         totalValue: 0
@@ -55,11 +67,11 @@ export class PlayMatchService {
     const events = await this.eventRepository.find({});
 
     const team1 = [
-      ...teamHome[0].cards,
+      ...teamHome.cards,
       ...(await this.cardService.generateTeamCards(2))
     ];
     const team2 = [
-      ...teamOut[0].cards,
+      ...teamOut.cards,
       ...(await this.cardService.generateTeamCards(2))
     ];
 
@@ -91,10 +103,15 @@ export class PlayMatchService {
     if (result.home.result == result.out.result) {
       if (penalt) {
         result.penalts = this.penaltService.playMatchPenalts(team1, team2);
-        result.winnerName =
-          result.penalts.winner == EnumTeamSide.HOME
-            ? result.home.name
-            : result.out.name;
+        if (result.penalts.winner == EnumTeamSide.HOME) {
+          result.winnerName = result.home.name;
+          result.winnerId = result.home.id;
+          result.winnerRef = EnumTeamSide.HOME;
+        } else {
+          result.winnerName = result.out.name;
+          result.winnerId = result.out.id;
+          result.winnerRef = EnumTeamSide.OUT;
+        }
       } else {
         result.winnerName = 'DRAW';
         result.winnerId = 'DRAW';
