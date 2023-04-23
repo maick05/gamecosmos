@@ -9,6 +9,7 @@ import { RoundService } from 'src/application/service/match/round.service';
 import { PenaltService } from 'src/application/service/match/penalt.service';
 import { Match, MatchsSchema } from 'src/domain/schema/game/match.schema';
 import { MatchRepository } from 'src/adapter/repository/game/match.repository';
+import { TeamModule } from './team.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { MatchRepository } from 'src/adapter/repository/game/match.repository';
       { name: Event.name, schema: EventsSchema },
       { name: Match.name, schema: MatchsSchema }
     ]),
-    CardModule
+    CardModule,
+    TeamModule
   ],
   controllers: [MatchController],
   providers: [

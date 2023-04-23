@@ -4,10 +4,8 @@ import {
   Logger,
   NotFoundException
 } from '@nestjs/common';
-import { EnumCompetitionRef } from 'src/domain/enum/EnumCompetitionRef';
 import { PlayCompetitionRoundDto } from 'src/application/dto/play-competition-round.dto';
 import { CompetitionRepository } from 'src/adapter/repository/game/competition.repository';
-import { StageRepository } from 'src/adapter/repository/game/stage.repository';
 import { RoundRepository } from 'src/adapter/repository/game/round.repository';
 import { EnumCompetitionType } from 'src/domain/enum/EnumCompetitionType';
 import { CompetitionDocument } from 'src/domain/schema/game/competition.schema';
@@ -16,6 +14,8 @@ import { MatchDocument } from 'src/domain/schema/game/match.schema';
 import { PlayMatchService } from '../../match/play-match.service';
 import { MatchResultModel } from 'src/domain/model/match-result.model';
 import { MatchResponse } from 'src/application/dto/match-response.dto';
+import { CreateCupRoundService } from '../create/create-cup-round.service';
+import { RoundDocument } from 'src/domain/schema/game/round.schema';
 
 @Injectable()
 export class PlayCompetitionRoundService {
@@ -25,7 +25,8 @@ export class PlayCompetitionRoundService {
     private readonly competitionRepository: CompetitionRepository,
     private readonly roundRepository: RoundRepository,
     private readonly matchRepository: MatchRepository,
-    private readonly playMatchService: PlayMatchService
+    private readonly playMatchService: PlayMatchService,
+    private readonly createRoundService: CreateCupRoundService
   ) {}
 
   async playByRound(playDto: PlayCompetitionRoundDto): Promise<any> {
@@ -45,14 +46,16 @@ export class PlayCompetitionRoundService {
     const matches = await this.getMatches(round._id);
 
     for await (const match of matches) {
-      const result = await this.playMatchService.playMatch(match);
+      const result = await this.playMatchService.playMatch(match, true);
       results.push(this.mapResultMatchToResponse(result));
     }
+
+    await this.createRoundService.createNextMatchesRound(competition, round);
 
     return results;
   }
 
-  private async getRound(idCompetition: string): Promise<CompetitionDocument> {
+  private async getRound(idCompetition: string): Promise<RoundDocument> {
     const round = await this.roundRepository.find(
       {
         played: false,

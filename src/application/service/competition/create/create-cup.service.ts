@@ -1,6 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CompetitionRepository } from 'src/adapter/repository/game/competition.repository';
-import { MatchRepository } from 'src/adapter/repository/game/match.repository';
 import { RoundRepository } from 'src/adapter/repository/game/round.repository';
 import { StageRepository } from 'src/adapter/repository/game/stage.repository';
 import { TeamRepository } from 'src/adapter/repository/game/team.repository';
@@ -16,10 +15,10 @@ import {
   Competition,
   CompetitionDocument
 } from 'src/domain/schema/game/competition.schema';
-import { Match } from 'src/domain/schema/game/match.schema';
 import { Round, RoundDocument } from 'src/domain/schema/game/round.schema';
 import { Stage, StageDocument } from 'src/domain/schema/game/stage.schema';
 import { TeamDocument } from 'src/domain/schema/game/team.schema';
+import { CreateCupRoundService } from './create-cup-round.service';
 
 @Injectable()
 export class CreateCupService {
@@ -31,7 +30,7 @@ export class CreateCupService {
     private readonly competitionRepository: CompetitionRepository,
     private readonly stageRepository: StageRepository,
     private readonly roundRepository: RoundRepository,
-    private readonly matchRepository: MatchRepository
+    private readonly createRoundCupService: CreateCupRoundService
   ) {}
 
   async createCup(createDto: CreateCompetitionDto): Promise<any> {
@@ -127,7 +126,7 @@ export class CreateCupService {
       round.idStage = stage._id;
       round.name = stage.name;
       round.season = 1;
-      round.sequence = seq;
+      round.sequence = 1;
       round.turn = 1;
 
       const savedRound = await this.roundRepository.createRound(round);
@@ -148,21 +147,13 @@ export class CreateCupService {
       const teamHome = teams[i];
       const teamOut = teams[i + 1];
 
-      const match = new Match();
-      match.idTeamHome = teamHome._id;
-      match.teamHome = teamHome.name;
-      match.idTeamOut = teamOut.id;
-      match.teamOut = teamOut.name;
-      match.idCompetition = competition._id;
-      match.idStage = stage._id;
-      match.idRound = round._id;
-      match.season = 1;
-
-      this.logger.log(
-        `Creating Match - ${teamHome.name} x ${teamOut.name} ...`
+      await this.createRoundCupService.createMatch(
+        competition,
+        teamHome,
+        teamOut,
+        stage,
+        round
       );
-
-      await this.matchRepository.createMatch(match);
     }
   }
 }

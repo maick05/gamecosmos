@@ -7,7 +7,7 @@ export class MatchController {
 
   @Post('/play')
   async playMatch(): Promise<any> {
-    const response = await this.matchService.playMatch();
-    return response;
+    // const response = await this.matchService.playMatch();
+    // return response;
   }
 }
