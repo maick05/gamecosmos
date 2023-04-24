@@ -18,12 +18,19 @@ export abstract class GameRepository<
     return this.model.find({ name });
   }
 
-  async updateOneById(id: MongooseDocumentID, data: any): Promise<void> {
+  async updateOneById(
+    id: MongooseDocumentID,
+    data: Partial<EntDocument>
+  ): Promise<void> {
     await this.model.updateOne(
       { _id: id },
       {
         $set: data
       }
     );
+  }
+
+  async createItem(item: Entity): Promise<EntDocument> {
+    return this.model.create(item);
   }
 }

@@ -41,7 +41,7 @@ export class CreateTeamService {
     team.reputation = EnumCompetitionLevel.REGIONAL;
     team.cards = await this.cardService.generateTeamCards();
 
-    await this.teamRepository.createTeam(team);
+    await this.teamRepository.createItem(team);
 
     this.logger.log(`Team "${createDto.name}" successfully created!`);
   }

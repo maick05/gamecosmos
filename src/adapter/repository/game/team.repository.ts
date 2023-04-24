@@ -13,10 +13,6 @@ export class TeamRepository extends GameRepository<Team, TeamDocument> {
     super(model);
   }
 
-  async createTeam(team: Team): Promise<TeamDocument> {
-    return this.model.create(team);
-  }
-
   async findTeamsByCountry(idCountry: string): Promise<TeamDocument[]> {
     return this.model.find({ idCountry }, { _id: 1, name: 1 });
   }

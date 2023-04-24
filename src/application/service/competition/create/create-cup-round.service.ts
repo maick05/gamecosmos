@@ -121,6 +121,6 @@ export class CreateCupRoundService {
 
     this.logger.log(`Creating Match - ${teamHome.name} x ${teamOut.name} ...`);
 
-    await this.matchRepository.createMatch(match);
+    await this.matchRepository.createItem(match);
   }
 }

@@ -18,10 +18,4 @@ export class CompetitionRepository extends GameRepository<
   ) {
     super(model);
   }
-
-  async createCompetition(
-    competition: Competition
-  ): Promise<CompetitionDocument> {
-    return this.model.create(competition);
-  }
 }

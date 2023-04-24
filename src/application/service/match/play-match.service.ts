@@ -101,6 +101,7 @@ export class PlayMatchService {
     }
 
     if (result.home.result == result.out.result) {
+      result.winnerNormalTimeRef = EnumTeamSide.DRAW;
       if (penalt) {
         result.penalts = this.penaltService.playMatchPenalts(team1, team2);
         if (result.penalts.winner == EnumTeamSide.HOME) {
@@ -127,6 +128,7 @@ export class PlayMatchService {
         result.winnerId = result.out.id;
         result.winnerRef = EnumTeamSide.OUT;
       }
+      result.winnerNormalTimeRef = result.winnerRef;
     }
 
     this.logger.log(
@@ -184,7 +186,7 @@ export class PlayMatchService {
       winnerName: result.winnerName,
       winnerRef: result.winnerRef,
       rounds: result.rounds,
-      penalt: result.penalts
+      penalts: result.penalts
     });
 
     await this.logger.log('Match Successfully updated!');

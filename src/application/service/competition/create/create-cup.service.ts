@@ -51,9 +51,7 @@ export class CreateCupService {
 
     this.logger.log(`Creating Competition "Copa ${country[0].label}"...`);
 
-    const saved = await this.competitionRepository.createCompetition(
-      competition
-    );
+    const saved = await this.competitionRepository.createItem(competition);
 
     this.logger.log(`Competition "Copa ${country[0].label}" created!`);
 
@@ -101,7 +99,7 @@ export class CreateCupService {
       stage.sequence = cont;
       stage.type = EnumStageType.KNOCKOUT;
 
-      const stageSaved = await this.stageRepository.createStage(stage);
+      const stageSaved = await this.stageRepository.createItem(stage);
 
       arrStage.push(stageSaved);
     } while (i !== 2);
@@ -129,7 +127,7 @@ export class CreateCupService {
       round.sequence = 1;
       round.turn = 1;
 
-      const savedRound = await this.roundRepository.createRound(round);
+      const savedRound = await this.roundRepository.createItem(round);
 
       if (seq > 1) continue;
 

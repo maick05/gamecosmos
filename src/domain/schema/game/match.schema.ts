@@ -58,6 +58,9 @@ export class Match {
   winnerRef: number;
 
   @Prop({ required: false })
+  winnerNormalTimeRef: number;
+
+  @Prop({ required: false })
   rounds: MatchRound[];
 
   @Prop({ required: false, type: Object })

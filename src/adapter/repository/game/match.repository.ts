@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Match, MatchDocument } from 'src/domain/schema/game/match.schema';
@@ -11,10 +11,6 @@ export class MatchRepository extends GameRepository<Match, MatchDocument> {
     model: Model<MatchDocument>
   ) {
     super(model);
-  }
-
-  async createMatch(match: Match): Promise<MatchDocument> {
-    return this.model.create(match);
   }
 
   async findMatchsByRound(idRound: string): Promise<MatchDocument[]> {

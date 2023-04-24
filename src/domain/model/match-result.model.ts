@@ -8,6 +8,7 @@ export interface MatchResultModel {
   winnerName: string;
   winnerId?: string;
   winnerRef?: number;
+  winnerNormalTimeRef?: number;
   rounds: MatchRound[];
   penalts?: PenaltResult;
 }

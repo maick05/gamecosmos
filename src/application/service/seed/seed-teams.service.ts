@@ -100,7 +100,7 @@ export class SeedTeamsService {
       team.preNivel = feature.diameter;
       team.reputation = EnumCompetitionLevel.REGIONAL;
       team.cards = cards;
-      await this.teamRepository.createTeam(team);
+      await this.teamRepository.createItem(team);
 
       this.logger.log(`Team ${feature.name} created!`);
     }

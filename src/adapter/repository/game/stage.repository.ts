@@ -12,8 +12,4 @@ export class StageRepository extends GameRepository<Stage, StageDocument> {
   ) {
     super(model);
   }
-
-  async createStage(stage: Stage): Promise<StageDocument> {
-    return this.model.create(stage);
-  }
 }

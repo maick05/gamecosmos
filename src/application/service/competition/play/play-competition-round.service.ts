@@ -47,7 +47,7 @@ export class PlayCompetitionRoundService {
 
     for await (const match of matches) {
       const result = await this.playMatchService.playMatch(match, true);
-      results.push(this.mapResultMatchToResponse(result));
+      results.push(this.mapResultMatchToResponse(match._id, result));
     }
 
     await this.createRoundService.createNextMatchesRound(competition, round);
@@ -94,8 +94,12 @@ export class PlayCompetitionRoundService {
     return matches;
   }
 
-  private mapResultMatchToResponse(result: MatchResultModel): MatchResponse {
+  private mapResultMatchToResponse(
+    idMatch: string,
+    result: MatchResultModel
+  ): MatchResponse {
     return {
+      idMatch: idMatch,
       teamHome: result.home.name,
       resultHome: result.home.result,
       teamOut: result.out.name,

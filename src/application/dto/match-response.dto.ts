@@ -1,6 +1,7 @@
 import { PenaltResult } from 'src/domain/model/match-result.model';
 
 export class MatchResponse {
+  idMatch: string;
   teamHome: string;
   resultHome: number;
   teamOut: string;
